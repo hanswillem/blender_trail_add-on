@@ -65,7 +65,14 @@ def main_stopTrail():
     isTrailing = False
     bpy.app.handlers.frame_change_pre.clear()
     
-
+def groupExists():
+    a = False;
+    for i in bpy.data.groups:
+        if i.name == 'trailGroup':
+            return True
+    return a
+    
+    
 #panel class
 class Panel_trail(bpy.types.Panel):
     
@@ -80,7 +87,8 @@ class Panel_trail(bpy.types.Panel):
     #draw loop
     def draw(self, context):
         layout = self.layout
-        layout.label('Trails: ' + str(trailLength))
+        if not groupExists():
+            layout.label('no trailGroup!')
         col = layout.column(align = True)
         if isTrailing:
             col.operator('script.operator_stop_trail', text="Stop Trail")
@@ -101,7 +109,7 @@ class Operator_startTrail(bpy.types.Operator):
     #poll - if the poll function returns False, the button will be greyed out
     @classmethod
     def poll(cls, context):
-        return 2 > 1
+        return groupExists()
     
     #execute
     def execute(self, context):
